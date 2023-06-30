@@ -5,6 +5,8 @@
 #include <QList>
 #include <QDataStream>
 #include <QDebug>
+#include <QThreadPool>
+#include <QFuture>
 
 class TCPServer : public QTcpServer
 {
@@ -23,13 +25,21 @@ public:
     }
 public slots:
     void readyRead();
-private:
+public:
     void incomingConnection(qintptr socketDescriptor) override;
     void sendToClient(QString msg);
-private:
+    void clientThreadFunc(std::vector<std::vector<quint32>>& matrix);
+    void openmpFunc(std::vector<std::vector<quint32>>& matrix);
+    void rowTranspose(int thread_id, std::vector<std::vector<quint32>>& matrix, int k);
+public:
     QTcpSocket *socket;
+public:
+    std::vector<std::vector<quint32>> matrix;
+    std::vector<QFuture<void>> workers;
+    quint32 k;
+    int parallelWay;
     QByteArray data;
-    QList<QTcpSocket*> clients;
+    bool openmpFinished;
 };
 
 #endif // TCPSERVER_H

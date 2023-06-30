@@ -11,7 +11,8 @@ CONFIG -= app_bundle
 SOURCES += \
         main.cpp \
         tcpserver.cpp
-
+QMAKE_CXXFLAGS += -fopenmp
+LIBS += -fopenmp
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
